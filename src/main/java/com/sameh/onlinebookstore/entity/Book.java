@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "books")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -22,7 +22,7 @@ public class Book {
 
     private String author;
 
-    private Date publishDate;
+    private LocalDateTime publishDate;
 
     private String description;
 

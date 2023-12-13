@@ -13,9 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "borrowing_requests")
-public class BorrowingRequests {
+public class BorrowingRequest {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
