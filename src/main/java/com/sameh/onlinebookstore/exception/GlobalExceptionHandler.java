@@ -31,4 +31,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(NoUpdateFoundException.class)
+    public ResponseEntity<ErrorDetails> handleNoUpdateFoundException(NoUpdateFoundException e){
+        ErrorDetails errorDetails = new ErrorDetails(
+                e.getMessage(),
+                HttpStatus.FOUND.value(),
+                new Date()
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.FOUND);
+    }
 }

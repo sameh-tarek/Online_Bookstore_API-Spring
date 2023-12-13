@@ -2,11 +2,14 @@ package com.sameh.onlinebookstore.service.impl;
 
 import com.sameh.onlinebookstore.entity.Category;
 import com.sameh.onlinebookstore.exception.ConflictException;
+import com.sameh.onlinebookstore.exception.NoUpdateFoundException;
+import com.sameh.onlinebookstore.exception.RecordNotFoundException;
 import com.sameh.onlinebookstore.mapper.CategoryMapper;
 import com.sameh.onlinebookstore.model.category.CategoryRequestDTO;
 import com.sameh.onlinebookstore.repository.CategoryRepository;
 import com.sameh.onlinebookstore.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +36,34 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category);
         log.warn("This new category has been added successfully {}", category);
         return "Success";
+    }
+
+    @Override
+    public String updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
+        log.warn("Admin want to update the category with id {}", id);
+        Category existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("This category with id "+ id + "doesn't exist"));
+        Category updatedCategory = categoryMapper.toEntity(categoryRequestDTO);
+        updatedCategory.setId(existingCategory.getId());
+
+        if(existingCategory.equals(updatedCategory)){
+            log.error("not found any updates the updateCategory: {}, the existingCategory: {}", updatedCategory,existingCategory);
+            throw new NoUpdateFoundException("Not found Any update in the Category details");
+        }
+        log.warn("The category Before update {}", existingCategory);
+        BeanUtils.copyProperties(updatedCategory, existingCategory, "id");
+        categoryRepository.save(existingCategory);
+        log.warn("The Category Updated Successfully, the Category after update {}", existingCategory);
+        return "The Category updated successfully";
+    }
+
+    @Override
+    public String deleteCategory(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("This category with id "+ id + " doesn't exist"));
+        log.warn("Admin want to delete this Category {}" , category);
+        categoryRepository.delete(category);
+        log.warn("The Category deleted Successfully");
+        return "Category Deleted Successfully";
     }
 }
