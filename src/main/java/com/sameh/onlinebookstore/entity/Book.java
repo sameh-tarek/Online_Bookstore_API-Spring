@@ -26,6 +26,8 @@ public class Book {
 
     private String description;
 
+    private int stockLevel;
+
     private boolean available;
 
     @ManyToOne

@@ -5,6 +5,7 @@ import com.sameh.onlinebookstore.exception.ConflictException;
 import com.sameh.onlinebookstore.exception.NoUpdateFoundException;
 import com.sameh.onlinebookstore.exception.RecordNotFoundException;
 import com.sameh.onlinebookstore.mapper.BookMapper;
+import com.sameh.onlinebookstore.model.Stock.StockUpdateRequest;
 import com.sameh.onlinebookstore.model.book.BookAvailabilityRequest;
 import com.sameh.onlinebookstore.model.book.BookRequestDTO;
 import com.sameh.onlinebookstore.repository.BookRepository;
@@ -91,5 +92,19 @@ public class BookServiceImpl implements BookService {
         bookRepository.delete(book);
         log.warn("The Book Deleted Successfully");
         return "The Book Deleted Successfully";
+    }
+
+    @Override
+    public String updateStock(Long id, StockUpdateRequest stockUpdateRequest) {
+        Book book = bookRepository.findById(id)
+                        .orElseThrow(() -> new RecordNotFoundException("The book with ID " + id + " does not exist"));
+        log.warn("Admin want to update Stock Level for this Book {}", book);
+        if(book.getStockLevel() == stockUpdateRequest.getStockLevel()){
+            throw new NoUpdateFoundException("Not found update in book Stock Level");
+        }
+        book.setStockLevel(stockUpdateRequest.getStockLevel());
+        bookRepository.save(book);
+        log.warn("The Book After update Stock Level {}", book);
+        return "Stock Level updated Successfully";
     }
 }

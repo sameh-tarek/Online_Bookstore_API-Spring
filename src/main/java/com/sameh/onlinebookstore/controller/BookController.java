@@ -1,5 +1,6 @@
 package com.sameh.onlinebookstore.controller;
 
+import com.sameh.onlinebookstore.model.Stock.StockUpdateRequest;
 import com.sameh.onlinebookstore.model.book.BookAvailabilityRequest;
 import com.sameh.onlinebookstore.model.book.BookRequestDTO;
 import com.sameh.onlinebookstore.service.BookService;
@@ -35,10 +36,16 @@ public class BookController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<String> updateStock(@PathVariable(name = "id") Long id, @Valid @RequestBody StockUpdateRequest stockUpdateRequest){
+        String result = bookService.updateStock(id, stockUpdateRequest);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteBook(@PathVariable(name = "id") Long id){
         String result = bookService.deleteBook(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 }
