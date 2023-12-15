@@ -1,4 +1,4 @@
-package com.sameh.onlinebookstore.model.Stock;
+package com.sameh.onlinebookstore.model.stock;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

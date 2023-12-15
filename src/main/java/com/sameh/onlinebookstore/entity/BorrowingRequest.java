@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @Data
 @AllArgsConstructor
@@ -27,11 +28,9 @@ public class BorrowingRequest {
     private Book book;
 
     @Enumerated(EnumType.STRING)
-    private Status borrowingStatus;
+    private Status borrowingStatus = Status.pending;
 
-    private Date borrowingDate;
+    private LocalDateTime borrowingDate;
 
-    private Date expectedReturnDate;
-
-    private boolean returned;
+    private LocalDateTime expectedReturnDate;
 }

@@ -1,8 +1,11 @@
 package com.sameh.onlinebookstore.service;
 
-import com.sameh.onlinebookstore.model.Stock.StockUpdateRequest;
+import com.sameh.onlinebookstore.model.stock.StockUpdateRequest;
 import com.sameh.onlinebookstore.model.book.BookAvailabilityRequest;
 import com.sameh.onlinebookstore.model.book.BookRequestDTO;
+import com.sameh.onlinebookstore.model.borrowingRequest.BorrowingRequestDTO;
+
+import java.util.List;
 
 public interface BookService {
 
@@ -15,4 +18,14 @@ public interface BookService {
     String deleteBook(Long id);
 
     String updateStock(Long id, StockUpdateRequest stockUpdateRequest);
+
+    List<BookRequestDTO> getBooksByCategory(Long categoryId);
+
+    List<BookRequestDTO> getBooksByCategory(String categoryName);
+
+    BookRequestDTO getBookDetailsById(Long id);
+
+    String requestBorrowing(Long bookId, Long userId);
+
+    List<BorrowingRequestDTO> getAllBorrowingRequests();
 }
