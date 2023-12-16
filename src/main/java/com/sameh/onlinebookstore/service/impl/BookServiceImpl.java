@@ -3,11 +3,13 @@ package com.sameh.onlinebookstore.service.impl;
 import com.sameh.onlinebookstore.entity.Book;
 import com.sameh.onlinebookstore.entity.BorrowingRequest;
 import com.sameh.onlinebookstore.entity.User;
+import com.sameh.onlinebookstore.entity.enums.Status;
 import com.sameh.onlinebookstore.exception.ConflictException;
 import com.sameh.onlinebookstore.exception.NoUpdateFoundException;
 import com.sameh.onlinebookstore.exception.RecordNotFoundException;
 import com.sameh.onlinebookstore.mapper.BookMapper;
 import com.sameh.onlinebookstore.mapper.BorrowingRequestMapper;
+import com.sameh.onlinebookstore.model.borrowingRequest.BorrowingRequestWrapperDTO;
 import com.sameh.onlinebookstore.model.stock.StockUpdateRequest;
 import com.sameh.onlinebookstore.model.book.BookAvailabilityRequest;
 import com.sameh.onlinebookstore.model.book.BookRequestDTO;
@@ -22,6 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -217,5 +220,43 @@ public class BookServiceImpl implements BookService {
                         .collect(Collectors.toList());
         log.warn("All requests: {}", borrowingRequestDTOS);
         return borrowingRequestDTOS;
+    }
+
+    @Override
+    public String updateBorrowingStatus(Long requestId, Status newStatus, Long userId) {
+        log.warn("Admin want to update Borrowing Request status Status");
+        BorrowingRequest borrowingRequest = borrowingRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RecordNotFoundException("This Borrowing request with id" + requestId + " doesn't exist."));
+        log.warn("The old status is {}, The new status is {}",borrowingRequest.getBorrowingStatus(),newStatus);
+        if(borrowingRequest.getBorrowingStatus() == newStatus){
+            log.error("There is no update in the status");
+            throw new NoUpdateFoundException("There is no update in the status");
+        }
+        if(newStatus.equals(Status.approved)){
+            LocalDateTime borrowingDate = LocalDateTime.now().plusDays(1);
+            LocalDateTime expectedReturnDate = LocalDateTime.now().plusDays(12);
+            borrowingRequest.setBorrowingDate(borrowingDate);
+            borrowingRequest.setExpectedReturnDate(expectedReturnDate);
+            log.warn("This Borrowing request is approved {}", borrowingRequest);
+            log.warn("The Borrowing Date is {}, The Expected Return Date is {}", borrowingDate, expectedReturnDate);
+        }
+        borrowingRequest.setBorrowingStatus(newStatus);
+        borrowingRequestRepository.save(borrowingRequest);
+        log.warn("The Request after update is {}", borrowingRequest);
+        return "The Borrowing status is updated successfully";
+    }
+
+    @Override
+    public List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests(Long userId) {
+        log.warn("customer with id {} want to view his Borrowing requests", userId);
+        List<BorrowingRequest> borrowingRequests = borrowingRequestRepository.findByUserId(userId);
+        if (borrowingRequests.isEmpty()) {
+            throw new RecordNotFoundException("No borrowing requests found for user with ID " + userId);
+        }
+        List<BorrowingRequestWrapperDTO> customerBorrowingRequests = borrowingRequests.stream()
+                .map(borrowingRequestMapper::toWrapperDTO)
+                .collect(Collectors.toList());
+        log.warn("There are the borrowing requests {}", customerBorrowingRequests);
+        return customerBorrowingRequests;
     }
 }

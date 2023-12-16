@@ -7,6 +7,7 @@ import com.sameh.onlinebookstore.entity.enums.Status;
 import com.sameh.onlinebookstore.exception.RecordNotFoundException;
 import com.sameh.onlinebookstore.mapper.BorrowingRequestMapper;
 import com.sameh.onlinebookstore.model.borrowingRequest.BorrowingRequestDTO;
+import com.sameh.onlinebookstore.model.borrowingRequest.BorrowingRequestWrapperDTO;
 import com.sameh.onlinebookstore.repository.BookRepository;
 import com.sameh.onlinebookstore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,16 @@ public class BorrowingRequestMapperImpl implements BorrowingRequestMapper {
         borrowingRequest.setExpectedReturnDate(borrowingRequestDTO.getExpectedReturnDate());
 
         return borrowingRequest;
+    }
+
+    @Override
+    public BorrowingRequestWrapperDTO toWrapperDTO(BorrowingRequest borrowingRequest) {
+        BorrowingRequestWrapperDTO borrowingRequestWrapperDTO = new BorrowingRequestWrapperDTO();
+        borrowingRequestWrapperDTO.setBookTitle(borrowingRequest.getBook().getTitle());
+        borrowingRequestWrapperDTO.setBorrowingStatus(String.valueOf(borrowingRequest.getBorrowingStatus()));
+        borrowingRequestWrapperDTO.setBorrowingDate(borrowingRequest.getBorrowingDate());
+        borrowingRequestWrapperDTO.setExpectedReturnDate(borrowingRequest.getExpectedReturnDate());
+        return borrowingRequestWrapperDTO;
     }
 
 }

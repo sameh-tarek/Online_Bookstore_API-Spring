@@ -9,11 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BorrowingRequestDTO {
-    private Long id;
-    private Long userId;
-    private Long bookId;
-    private String userName;
+public class BorrowingRequestWrapperDTO {
     private String bookTitle;
     private String borrowingStatus;
     private LocalDateTime borrowingDate;

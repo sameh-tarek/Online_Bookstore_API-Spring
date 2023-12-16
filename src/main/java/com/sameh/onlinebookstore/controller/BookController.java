@@ -1,5 +1,7 @@
 package com.sameh.onlinebookstore.controller;
 
+import com.sameh.onlinebookstore.entity.enums.Status;
+import com.sameh.onlinebookstore.model.borrowingRequest.BorrowingRequestWrapperDTO;
 import com.sameh.onlinebookstore.model.stock.StockUpdateRequest;
 import com.sameh.onlinebookstore.model.book.BookAvailabilityRequest;
 import com.sameh.onlinebookstore.model.book.BookRequestDTO;
@@ -75,11 +77,28 @@ public class BookController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // Endpoint for admins to approve or reject a borrowing request
+    // http://localhost:8282/borrow/123/status?newStatus=approved
+    @PutMapping("/borrow/{requestId}/status")
+    public ResponseEntity<String> updateBorrowingStatus(
+            @PathVariable(name = "requestId") Long requestId,
+            @RequestParam Status newStatus){
+
+        Long userId = 1l; // get current user id
+        String result = bookService.updateBorrowingStatus(requestId, newStatus, userId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping("/requests")
     public ResponseEntity<List<BorrowingRequestDTO>> getAllBorrowingRequests() {
         List<BorrowingRequestDTO> borrowingRequests = bookService.getAllBorrowingRequests();
         return new ResponseEntity<>(borrowingRequests, HttpStatus.OK);
     }
 
+    @GetMapping("/requests/{userId}")
+    public ResponseEntity<List<BorrowingRequestWrapperDTO>> getCustomerBorrowingRequests(@PathVariable(name = "userId") Long userId) {
+        List<BorrowingRequestWrapperDTO> requests = bookService.getCustomerBorrowingRequests(userId);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
+    }
 
 }

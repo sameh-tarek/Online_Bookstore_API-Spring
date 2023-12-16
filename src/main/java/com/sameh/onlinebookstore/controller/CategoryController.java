@@ -1,6 +1,5 @@
 package com.sameh.onlinebookstore.controller;
 
-import com.sameh.onlinebookstore.entity.Category;
 import com.sameh.onlinebookstore.model.category.CategoryRequestDTO;
 import com.sameh.onlinebookstore.service.CategoryService;
 import jakarta.validation.Valid;
@@ -27,6 +26,7 @@ public class CategoryController {
         String result = categoryService.updateCategory(id, categoryRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 
     @DeleteMapping ("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable(name = "id") Long id){

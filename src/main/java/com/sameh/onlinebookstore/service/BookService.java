@@ -1,5 +1,7 @@
 package com.sameh.onlinebookstore.service;
 
+import com.sameh.onlinebookstore.entity.enums.Status;
+import com.sameh.onlinebookstore.model.borrowingRequest.BorrowingRequestWrapperDTO;
 import com.sameh.onlinebookstore.model.stock.StockUpdateRequest;
 import com.sameh.onlinebookstore.model.book.BookAvailabilityRequest;
 import com.sameh.onlinebookstore.model.book.BookRequestDTO;
@@ -28,4 +30,8 @@ public interface BookService {
     String requestBorrowing(Long bookId, Long userId);
 
     List<BorrowingRequestDTO> getAllBorrowingRequests();
+
+    String updateBorrowingStatus(Long requestId, Status newStatus, Long userId);
+
+    List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests(Long userId);
 }
