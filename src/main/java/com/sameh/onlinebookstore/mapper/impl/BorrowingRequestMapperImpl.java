@@ -50,7 +50,6 @@ public class BorrowingRequestMapperImpl implements BorrowingRequestMapper {
         borrowingRequest.setBorrowingStatus(Status.valueOf(borrowingRequestDTO.getBorrowingStatus()));
         borrowingRequest.setBorrowingDate(borrowingRequestDTO.getBorrowingDate());
         borrowingRequest.setExpectedReturnDate(borrowingRequestDTO.getExpectedReturnDate());
-
         return borrowingRequest;
     }
 
