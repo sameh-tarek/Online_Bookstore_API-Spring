@@ -1,4 +1,5 @@
-# Online Bookstore Management System API with java Spring Boot
+# Online Bookstore Management System API with Java Spring Boot
+
 ## Overview
 
 The Online Bookstore Management System simplifies book-related activities for customers and administrators. For detailed information, refer to the [Features](#features) section.
@@ -19,6 +20,8 @@ The Online Bookstore Management System simplifies book-related activities for cu
 | 2.  | View Book Details       | Get detailed information about a specific book. | `GET /book/{id}`                       |
 | 3.  | Request to Borrow a Book| Request to borrow a specific book.              | `POST /book/{id}/borrow`               |
 | 4.  | Check Borrowing Status  | View borrowing requests for a specific customer.| `GET /book/requests/{userId}`          |
+| 5.  | Register                | Register a new customer.                        | `POST /auth/register`                  |
+| 6.  | Authenticate            | Authenticate as a customer.                    | `POST /auth/authentication`           |
 
 ### Admin
 
@@ -32,3 +35,4 @@ The Online Bookstore Management System simplifies book-related activities for cu
 | 4.  | Delete Book             | Delete a book from the inventory.               | `DELETE /book/delete/{id}`            |
 | 5.  | Manage Borrowing Requests| Update the status of a borrowing request.       | `PUT /book/borrow/{requestId}/status` |
 | 6.  | Get All Borrowing Requests| View a list of all borrowing requests.        | `GET /book/requests`                  |
+| 7.  | Authenticate            | Authenticate as an admin.                      | `POST /auth/authentication`           |

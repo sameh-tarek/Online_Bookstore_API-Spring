@@ -1,5 +1,6 @@
 package com.sameh.onlinebookstore.service.impl;
 
+import com.sameh.onlinebookstore.entity.enums.Role;
 import com.sameh.onlinebookstore.exception.ConflictException;
 import com.sameh.onlinebookstore.mapper.UserMapper;
 import com.sameh.onlinebookstore.model.auth.AuthenticationRequest;
@@ -37,6 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(userRepository.findByEmail(user.getEmail()).isPresent()){
             throw new ConflictException("this User already exist");
         }
+        user.setRole(Role.CUSTOMER);
 
         userRepository.save(user);
         log.warn("The user has registered successfully {}", user);

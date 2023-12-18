@@ -22,6 +22,7 @@ import com.sameh.onlinebookstore.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -178,7 +179,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public String requestBorrowing(Long bookId, Long userId) {
+    public String requestBorrowing(Long bookId) {
+        //Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        Long userId = 1l;
         log.warn("customer with id {}, request Borrowing book with id {}", userId, bookId);
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID " + bookId + " does not exist"));
@@ -223,7 +226,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public String updateBorrowingStatus(Long requestId, Status newStatus, Long userId) {
+    public String updateBorrowingStatus(Long requestId, Status newStatus) {
         log.warn("Admin want to update Borrowing Request status Status");
         BorrowingRequest borrowingRequest = borrowingRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RecordNotFoundException("This Borrowing request with id" + requestId + " doesn't exist."));

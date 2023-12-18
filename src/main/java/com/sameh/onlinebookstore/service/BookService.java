@@ -27,11 +27,11 @@ public interface BookService {
 
     BookRequestDTO getBookDetailsById(Long id);
 
-    String requestBorrowing(Long bookId, Long userId);
+    String requestBorrowing(Long bookId);
 
     List<BorrowingRequestDTO> getAllBorrowingRequests();
 
-    String updateBorrowingStatus(Long requestId, Status newStatus, Long userId);
+    String updateBorrowingStatus(Long requestId, Status newStatus);
 
     List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests(Long userId);
 }

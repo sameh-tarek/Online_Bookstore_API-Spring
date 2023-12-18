@@ -72,8 +72,8 @@ public class BookController {
 
     @PostMapping("/{id}/borrow")
     public ResponseEntity<String> requestBorrowing(@PathVariable(name = "id") Long bookId){
-        Long userId = 1l; // get current user id
-        String result =  bookService.requestBorrowing(bookId, userId);
+       // Long userId = 1l; // get current user id
+        String result =  bookService.requestBorrowing(bookId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -84,8 +84,7 @@ public class BookController {
             @PathVariable(name = "requestId") Long requestId,
             @RequestParam Status newStatus){
 
-        Long userId = 1l; // get current user id
-        String result = bookService.updateBorrowingStatus(requestId, newStatus, userId);
+        String result = bookService.updateBorrowingStatus(requestId, newStatus);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
