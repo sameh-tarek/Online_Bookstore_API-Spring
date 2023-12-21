@@ -82,4 +82,5 @@ You can also access the raw API documentation in JSON format at [http://localhos
 
 
 ## ERD 
-![](C:\Users\acer\Desktop\BorrowingRequest.png)
+
+![BorrowingRequest](https://github.com/sameh-tarek/Online_Bookstore_API-Spring/assets/108232157/7db58c93-63c0-423d-b8b8-0162eddd5ee9)
