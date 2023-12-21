@@ -14,14 +14,14 @@ The Online Bookstore Management System simplifies book-related activities for cu
 
 ### Customer
 
-| No. | Feature                 | Description                                     | Endpoint                              |
-|----:|-------------------------|-------------------------------------------------|----------------------------------------|
-| 1.  | Browse Books            | Explore books by categories.                    | `GET /book/category/{category}`        |
-| 2.  | View Book Details       | Get detailed information about a specific book. | `GET /book/{id}`                       |
-| 3.  | Request to Borrow a Book| Request to borrow a specific book.              | `POST /book/{id}/borrow`               |
-| 4.  | Check Borrowing Status  | View borrowing requests for a specific customer.| `GET /book/requests/{userId}`          |
-| 5.  | Register                | Register a new customer.                        | `POST /auth/register`                  |
-| 6.  | Authenticate            | Authenticate as a customer.                    | `POST /auth/authentication`           |
+| No. | Feature                 | Description                                     | Endpoint                        |
+|----:|-------------------------|-------------------------------------------------|---------------------------------|
+| 1.  | Browse Books            | Explore books by categories.                    | `GET /book/category/{category}` |
+| 2.  | View Book Details       | Get detailed information about a specific book. | `GET /book/{id}`                |
+| 3.  | Request to Borrow a Book| Request to borrow a specific book.              | `POST /book/{id}/borrow`        |
+| 4.  | Check Borrowing Status  | View borrowing requests for a specific customer.| `GET /book/myrequests` |
+| 5.  | Register                | Register a new customer.                        | `POST /auth/register`           |
+| 6.  | Authenticate            | Authenticate as a customer.                    | `POST /auth/authentication`     |
 
 ### Admin
 

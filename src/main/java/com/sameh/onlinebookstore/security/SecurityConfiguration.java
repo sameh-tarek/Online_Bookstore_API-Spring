@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/book/borrow/{requestId}/status").hasAuthority("SCOPE_ADMIN")
                 .requestMatchers("/book/requests").hasAuthority("SCOPE_ADMIN")
                 .requestMatchers("/book/{id}/borrow").hasAuthority("SCOPE_CUSTOMER")
-                .requestMatchers("/book/requests/{userId}").hasAuthority("SCOPE_CUSTOMER")
+                .requestMatchers("/book/myrequests").hasAuthority("SCOPE_CUSTOMER")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)

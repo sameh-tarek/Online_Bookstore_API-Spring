@@ -72,7 +72,6 @@ public class BookController {
 
     @PostMapping("/{id}/borrow")
     public ResponseEntity<String> requestBorrowing(@PathVariable(name = "id") Long bookId){
-       // Long userId = 1l; // get current user id
         String result =  bookService.requestBorrowing(bookId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -94,9 +93,9 @@ public class BookController {
         return new ResponseEntity<>(borrowingRequests, HttpStatus.OK);
     }
 
-    @GetMapping("/requests/{userId}")
-    public ResponseEntity<List<BorrowingRequestWrapperDTO>> getCustomerBorrowingRequests(@PathVariable(name = "userId") Long userId) {
-        List<BorrowingRequestWrapperDTO> requests = bookService.getCustomerBorrowingRequests(userId);
+    @GetMapping("/myrequests")
+    public ResponseEntity<List<BorrowingRequestWrapperDTO>> getCustomerBorrowingRequests() {
+        List<BorrowingRequestWrapperDTO> requests = bookService.getCustomerBorrowingRequests();
         return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 

@@ -33,5 +33,5 @@ public interface BookService {
 
     String updateBorrowingStatus(Long requestId, Status newStatus);
 
-    List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests(Long userId);
+    List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests();
 }

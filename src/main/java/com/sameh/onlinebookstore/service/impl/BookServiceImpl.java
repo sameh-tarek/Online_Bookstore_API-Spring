@@ -19,10 +19,13 @@ import com.sameh.onlinebookstore.repository.BorrowingRequestRepository;
 import com.sameh.onlinebookstore.repository.CategoryRepository;
 import com.sameh.onlinebookstore.repository.UserRepository;
 import com.sameh.onlinebookstore.service.BookService;
+import com.sameh.onlinebookstore.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -180,8 +183,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String requestBorrowing(Long bookId) {
-        //Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        Long userId = 1l;
+        String userEmail = SecurityUtils.getCurrentUserEmail();
+        Long userId = getUserId(userEmail);
         log.warn("customer with id {}, request Borrowing book with id {}", userId, bookId);
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID " + bookId + " does not exist"));
@@ -208,6 +211,14 @@ public class BookServiceImpl implements BookService {
 
         log.warn("The request you are submitting to borrow the book whose ID is {} has been sent to the admin and will be reviewed, and this is the request {}", bookId, newBorrowingRequest);
         return "The request you are submitting to borrow the book has been sent to the admin and will be reviewed.";
+    }
+
+    private Long getUserId(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+        Long userId = user.getId();
+        log.warn("authenticated user id {}", userId);
+        return userId;
     }
 
     @Override
@@ -250,7 +261,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests(Long userId) {
+    public List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests() {
+        String userEmail = SecurityUtils.getCurrentUserEmail();
+        Long userId = getUserId(userEmail);
         log.warn("customer with id {} want to view his Borrowing requests", userId);
         List<BorrowingRequest> borrowingRequests = borrowingRequestRepository.findByUserId(userId);
         if (borrowingRequests.isEmpty()) {
