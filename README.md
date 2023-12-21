@@ -10,6 +10,23 @@ The Online Bookstore Management System simplifies book-related activities for cu
 
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://god.gw.postman.com/run-collection/28660393-a2d78342-816a-459b-acd9-c0497faf33f7?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D28660393-a2d78342-816a-459b-acd9-c0497faf33f7%26entityType%3Dcollection%26workspaceId%3D2530de03-f49e-405c-a206-6791503e028b)
 
+## Requirements
+
+1. **Java Development Kit (JDK) 17 or above:**
+   - Ensure that you have Java Development Kit version 17 or a later version installed on your system.
+
+2. **MySQL Database:**
+    - Utilize a local MySQL instance or connect to a remote MySQL server.
+
+## How to Run
+
+1- Clone the project repository from Git (if it's not already cloned).
+
+2- Import the project into your favorite Java IDE (e.g., IntelliJ, Eclipse, etc.).
+
+3- Build the project to resolve dependencies.
+
+
 ## Features
 
 ### Customer
@@ -36,3 +53,33 @@ The Online Bookstore Management System simplifies book-related activities for cu
 | 5.  | Manage Borrowing Requests| Update the status of a borrowing request.       | `PUT /book/borrow/{requestId}/status` |
 | 6.  | Get All Borrowing Requests| View a list of all borrowing requests.        | `GET /book/requests`                  |
 | 7.  | Authenticate            | Authenticate as an admin.                      | `POST /auth/authentication`           |
+
+
+## Creating RSA Key Pair
+- in a new folder under /src/main/resources/certs 
+- run this commands in terminal
+
+```bash
+# create rsa key pair
+openssl genrsa -out keypair.pem 2048
+# extract public key
+openssl rsa -in keypair.pem -pubout -out public.pem
+# create private key in PKCS#8 format
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
+```
+
+## Swagger Documentation
+
+After running the project, you can access the Swagger documentation to explore and understand the APIs.
+
+### Swagger UI
+
+Visit [http://localhost:8282/swagger-ui/index.html](http://localhost:8282/swagger-ui/index.html) to interact with the Swagger UI.
+
+### API Documentation
+
+You can also access the raw API documentation in JSON format at [http://localhost:8282/v3/api-docs](http://localhost:8282/v3/api-docs).
+
+
+## ERD 
+![](C:\Users\acer\Desktop\BorrowingRequest.png)
