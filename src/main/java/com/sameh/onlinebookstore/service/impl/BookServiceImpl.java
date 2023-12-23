@@ -23,8 +23,6 @@ import com.sameh.onlinebookstore.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +54,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String addNewBook(BookRequestDTO bookRequestDTO) {
-        log.warn("Admin want to add this book {}", bookRequestDTO);
+        log.info("Admin want to add this book {}", bookRequestDTO);
 
         bookRepository.findByTitle(bookRequestDTO.getTitle())
                 .ifPresent(existingBook -> {
@@ -68,13 +66,13 @@ public class BookServiceImpl implements BookService {
 
         Book newBook = bookMapper.toEntity(bookRequestDTO);
         bookRepository.save(newBook);
-        log.warn("This new Book has been added successfully {}", newBook);
+        log.info("This new Book has been added successfully {}", newBook);
         return "The Book Added Successfully";
     }
 
     @Override
     public String updateBook(Long id, BookRequestDTO bookRequestDTO) {
-        log.warn("Admin want to update the book with id {}", id);
+        log.info("Admin want to update the book with id {}", id);
         Book existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID "+ id +"does not exist"));
         Book updatedBook = bookMapper.toEntity(bookRequestDTO);
@@ -82,14 +80,14 @@ public class BookServiceImpl implements BookService {
         updatedBook.setPublishDate(existingBook.getPublishDate());
 
         if(updatedBook.equals(existingBook)){
-            log.error("not found any updates the updateBook: {}, the existingBook:{}", updatedBook,existingBook);
+            log.warn("not found any updates the updateBook: {}, the existingBook:{}", updatedBook,existingBook);
             throw new NoUpdateFoundException("Not found Any update in the book details");
         }
 
-        log.warn("the book before update: {}", existingBook);
+        log.info("the book before update: {}", existingBook);
         BeanUtils.copyProperties(updatedBook, existingBook, "id", "publishDate");
         bookRepository.save(existingBook);
-        log.warn("The Book Updated Successfully, the book after update {}", existingBook);
+        log.info("The Book Updated Successfully, the book after update {}", existingBook);
         return "The Book Updated Successfully";
     }
 
@@ -97,7 +95,7 @@ public class BookServiceImpl implements BookService {
     public String setBookAvailability(Long id, BookAvailabilityRequest bookAvailabilityRequest) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID "+ id +"does not exist"));
-        log.warn("Admin want to update availability for this book {}", book);
+        log.info("Admin want to update availability for this book {}", book);
 
         if(book.isAvailable() == bookAvailabilityRequest.isAvailable()){
             throw new NoUpdateFoundException("Not found update in book availability");
@@ -105,7 +103,7 @@ public class BookServiceImpl implements BookService {
 
         book.setAvailable(bookAvailabilityRequest.isAvailable());
         bookRepository.save(book);
-        log.warn("The Book After update Availability {}", book);
+        log.info("The Book After update Availability {}", book);
         return "The Book Availability is Updated Successfully";
     }
 
@@ -113,9 +111,9 @@ public class BookServiceImpl implements BookService {
     public String deleteBook(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID " + id + " does not exist"));
-        log.warn("Admin want to delete this book {}", book);
+        log.info("Admin want to delete this book {}", book);
         bookRepository.delete(book);
-        log.warn("The Book Deleted Successfully");
+        log.info("The Book Deleted Successfully");
         return "The Book Deleted Successfully";
     }
 
@@ -123,61 +121,63 @@ public class BookServiceImpl implements BookService {
     public String updateStock(Long id, StockUpdateRequest stockUpdateRequest) {
         Book book = bookRepository.findById(id)
                         .orElseThrow(() -> new RecordNotFoundException("The book with ID " + id + " does not exist"));
-        log.warn("Admin want to update Stock Level for this Book {}", book);
+        log.info("Admin want to update Stock Level for this Book {}", book);
         if(book.getStockLevel() == stockUpdateRequest.getStockLevel()){
             throw new NoUpdateFoundException("Not found update in book Stock Level");
         }
         book.setStockLevel(stockUpdateRequest.getStockLevel());
         bookRepository.save(book);
-        log.warn("The Book After update Stock Level {}", book);
+        log.info("The Book After update Stock Level {}", book);
         return "Stock Level updated Successfully";
     }
 
     @Override
     public List<BookRequestDTO> getBooksByCategory(Long categoryId) {
-        log.warn("Customer want to search by category with id {}", categoryId);
+        log.info("Customer want to search by category with id {}", categoryId);
 
         categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RecordNotFoundException("The Category with ID " + categoryId + " does not exist"));
 
         List<Book> books = bookRepository.findByCategoryId(categoryId);
         if (books.isEmpty()) {
+            log.warn("There are no books in this category with id {}", categoryId);
             throw new RecordNotFoundException("There are no books in this category");
         }
 
         List<BookRequestDTO> bookDTOs = books.stream()
                 .map(bookMapper::toDTO)
                 .collect(Collectors.toList());
-        log.warn("These are the books in this category {}", bookDTOs);
+        log.info("These are the books in this category {}", bookDTOs);
         return bookDTOs;
     }
 
 
     @Override
     public List<BookRequestDTO> getBooksByCategory(String categoryName) {
-        log.warn("Customer want to search by category with Name {}", categoryName);
+        log.info("Customer want to search by category with Name {}", categoryName);
         categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new RecordNotFoundException("The Category with Name " + categoryName + " does not exist"));
 
         List<Book> books = bookRepository.findByCategoryName(categoryName);
         if (books.isEmpty()) {
+            log.warn("There are no books in this category {}", categoryName);
             throw new RecordNotFoundException("There are no books in this category");
         }
 
         List<BookRequestDTO> bookDTOs = books.stream()
                 .map(bookMapper::toDTO)
                 .collect(Collectors.toList());
-        log.warn("These are the books in this category {}", bookDTOs);
+        log.info("These are the books in this category {}", bookDTOs);
         return bookDTOs;
     }
 
     @Override
     public BookRequestDTO getBookDetailsById(Long id) {
-        log.warn("Customer want to View Book Details with ID {}", id);
+        log.info("Customer want to View Book Details with ID {}", id);
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID " + id + " does not exist"));
         BookRequestDTO bookRequestDTO = bookMapper.toDTO(book);
-        log.warn("Book Details: {}", bookRequestDTO);
+        log.info("Book Details: {}", bookRequestDTO);
         return bookRequestDTO;
     }
 
@@ -185,11 +185,12 @@ public class BookServiceImpl implements BookService {
     public String requestBorrowing(Long bookId) {
         String userEmail = SecurityUtils.getCurrentUserEmail();
         Long userId = getUserId(userEmail);
-        log.warn("customer with id {}, request Borrowing book with id {}", userId, bookId);
+        log.info("customer with id {}, request Borrowing book with id {}", userId, bookId);
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID " + bookId + " does not exist"));
 
         if(!book.isAvailable() || book.getStockLevel()==0){
+            log.warn("The book with ID {} Not available now", bookId);
             throw new RecordNotFoundException("The book with ID " + bookId + " Not available now");
         }
 
@@ -209,7 +210,7 @@ public class BookServiceImpl implements BookService {
         newBorrowingRequest.setUser(user);
         borrowingRequestRepository.save(newBorrowingRequest);
 
-        log.warn("The request you are submitting to borrow the book whose ID is {} has been sent to the admin and will be reviewed, and this is the request {}", bookId, newBorrowingRequest);
+        log.info("The request you are submitting to borrow the book whose ID is {} has been sent to the admin and will be reviewed, and this is the request {}", bookId, newBorrowingRequest);
         return "The request you are submitting to borrow the book has been sent to the admin and will be reviewed.";
     }
 
@@ -217,31 +218,31 @@ public class BookServiceImpl implements BookService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
         Long userId = user.getId();
-        log.warn("authenticated user id {}", userId);
+        log.info("authenticated user id {}", userId);
         return userId;
     }
 
     @Override
     public List<BorrowingRequestDTO> getAllBorrowingRequests() {
-        log.warn("Admin want to view all requests");
+        log.info("Admin want to view all requests");
         List<BorrowingRequest> borrowingRequests = borrowingRequestRepository.findAll();
         if(borrowingRequests.isEmpty()){
-            log.error("There are no requests yet");
+            log.warn("There are no requests yet");
             throw new RecordNotFoundException("There are no requests yet");
         }
         List<BorrowingRequestDTO> borrowingRequestDTOS = borrowingRequests.stream()
                         .map(borrowingRequestMapper::toDTO)
                         .collect(Collectors.toList());
-        log.warn("All requests: {}", borrowingRequestDTOS);
+        log.info("All requests: {}", borrowingRequestDTOS);
         return borrowingRequestDTOS;
     }
 
     @Override
     public String updateBorrowingStatus(Long requestId, Status newStatus) {
-        log.warn("Admin want to update Borrowing Request status Status");
+        log.info("Admin want to update Borrowing Request status Status");
         BorrowingRequest borrowingRequest = borrowingRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RecordNotFoundException("This Borrowing request with id" + requestId + " doesn't exist."));
-        log.warn("The old status is {}, The new status is {}",borrowingRequest.getBorrowingStatus(),newStatus);
+        log.info("The old status is {}, The new status is {}",borrowingRequest.getBorrowingStatus(),newStatus);
         if(borrowingRequest.getBorrowingStatus() == newStatus){
             log.error("There is no update in the status");
             throw new NoUpdateFoundException("There is no update in the status");
@@ -251,12 +252,12 @@ public class BookServiceImpl implements BookService {
             LocalDateTime expectedReturnDate = LocalDateTime.now().plusDays(12);
             borrowingRequest.setBorrowingDate(borrowingDate);
             borrowingRequest.setExpectedReturnDate(expectedReturnDate);
-            log.warn("This Borrowing request is approved {}", borrowingRequest);
-            log.warn("The Borrowing Date is {}, The Expected Return Date is {}", borrowingDate, expectedReturnDate);
+            log.info("This Borrowing request is approved {}", borrowingRequest);
+            log.info("The Borrowing Date is {}, The Expected Return Date is {}", borrowingDate, expectedReturnDate);
         }
         borrowingRequest.setBorrowingStatus(newStatus);
         borrowingRequestRepository.save(borrowingRequest);
-        log.warn("The Request after update is {}", borrowingRequest);
+        log.info("The Request after update is {}", borrowingRequest);
         return "The Borrowing status is updated successfully";
     }
 
@@ -264,15 +265,16 @@ public class BookServiceImpl implements BookService {
     public List<BorrowingRequestWrapperDTO> getCustomerBorrowingRequests() {
         String userEmail = SecurityUtils.getCurrentUserEmail();
         Long userId = getUserId(userEmail);
-        log.warn("customer with id {} want to view his Borrowing requests", userId);
+        log.info("customer with id {} want to view his Borrowing requests", userId);
         List<BorrowingRequest> borrowingRequests = borrowingRequestRepository.findByUserId(userId);
         if (borrowingRequests.isEmpty()) {
+            log.warn("No borrowing requests found for user with ID {}", userId);
             throw new RecordNotFoundException("No borrowing requests found for user with ID " + userId);
         }
         List<BorrowingRequestWrapperDTO> customerBorrowingRequests = borrowingRequests.stream()
                 .map(borrowingRequestMapper::toWrapperDTO)
                 .collect(Collectors.toList());
-        log.warn("There are the borrowing requests {}", customerBorrowingRequests);
+        log.info("There are the borrowing requests {}", customerBorrowingRequests);
         return customerBorrowingRequests;
     }
 }

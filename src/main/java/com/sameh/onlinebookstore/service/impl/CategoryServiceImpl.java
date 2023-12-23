@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public String addCategory(CategoryRequestDTO categoryRequestDTO) {
-        log.warn("Admin want to add this category {}", categoryRequestDTO);
+        log.info("Admin want to add this category {}", categoryRequestDTO);
 
         categoryRepository.findByName(categoryRequestDTO.getName())
                 .ifPresent(existingCategory -> {
@@ -34,26 +34,26 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryMapper.toEntity(categoryRequestDTO);
         categoryRepository.save(category);
-        log.warn("This new category has been added successfully {}", category);
+        log.info("This new category has been added successfully {}", category);
         return "Success";
     }
 
     @Override
     public String updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
-        log.warn("Admin want to update the category with id {}", id);
+        log.info("Admin want to update the category with id {}", id);
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("This category with id "+ id + "doesn't exist"));
         Category updatedCategory = categoryMapper.toEntity(categoryRequestDTO);
         updatedCategory.setId(existingCategory.getId());
 
         if(existingCategory.equals(updatedCategory)){
-            log.error("not found any updates the updateCategory: {}, the existingCategory: {}", updatedCategory,existingCategory);
+            log.warn("not found any updates the updateCategory: {}, the existingCategory: {}", updatedCategory,existingCategory);
             throw new NoUpdateFoundException("Not found Any update in the Category details");
         }
-        log.warn("The category Before update {}", existingCategory);
+        log.info("The category Before update {}", existingCategory);
         BeanUtils.copyProperties(updatedCategory, existingCategory, "id");
         categoryRepository.save(existingCategory);
-        log.warn("The Category Updated Successfully, the Category after update {}", existingCategory);
+        log.info("The Category Updated Successfully, the Category after update {}", existingCategory);
         return "The Category updated successfully";
     }
 
@@ -61,9 +61,9 @@ public class CategoryServiceImpl implements CategoryService {
     public String deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("This category with id "+ id + " doesn't exist"));
-        log.warn("Admin want to delete this Category {}" , category);
+        log.info("Admin want to delete this Category {}" , category);
         categoryRepository.delete(category);
-        log.warn("The Category deleted Successfully");
+        log.info("The Category deleted Successfully");
         return "Category Deleted Successfully";
     }
 }
