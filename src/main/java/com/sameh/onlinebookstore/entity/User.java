@@ -29,4 +29,10 @@ public class User {
     private Role role;
 
     private boolean isEnabled = false;
+
+    public User(String userName, String email, String password) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
 }

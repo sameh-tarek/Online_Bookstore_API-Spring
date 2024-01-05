@@ -36,6 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         log.warn("this user want to register: {}", user);
 
         if(userRepository.findByEmail(user.getEmail()).isPresent()){
+            log.error("this User already exist");
             throw new ConflictException("this User already exist");
         }
         user.setRole(Role.CUSTOMER);
