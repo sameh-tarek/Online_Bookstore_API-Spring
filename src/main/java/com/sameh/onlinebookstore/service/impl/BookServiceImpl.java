@@ -58,6 +58,7 @@ public class BookServiceImpl implements BookService {
 
         bookRepository.findByTitle(bookRequestDTO.getTitle())
                 .ifPresent(existingBook -> {
+                    log.error("Book with Title: {} already exists", bookRequestDTO.getTitle() );
                     throw new ConflictException("Book with Title: " + bookRequestDTO.getTitle() + " already exists");
                 });
 
@@ -80,7 +81,7 @@ public class BookServiceImpl implements BookService {
         updatedBook.setPublishDate(existingBook.getPublishDate());
 
         if(updatedBook.equals(existingBook)){
-            log.warn("not found any updates the updateBook: {}, the existingBook:{}", updatedBook,existingBook);
+            log.error("not found any updates the updateBook: {}, the existingBook:{}", updatedBook,existingBook);
             throw new NoUpdateFoundException("Not found Any update in the book details");
         }
 
@@ -98,6 +99,7 @@ public class BookServiceImpl implements BookService {
         log.info("Admin want to update availability for this book {}", book);
 
         if(book.isAvailable() == bookAvailabilityRequest.isAvailable()){
+            log.error("Not found update in book availability");
             throw new NoUpdateFoundException("Not found update in book availability");
         }
 
@@ -123,6 +125,7 @@ public class BookServiceImpl implements BookService {
                         .orElseThrow(() -> new RecordNotFoundException("The book with ID " + id + " does not exist"));
         log.info("Admin want to update Stock Level for this Book {}", book);
         if(book.getStockLevel() == stockUpdateRequest.getStockLevel()){
+            log.error("Not found update in book Stock Level");
             throw new NoUpdateFoundException("Not found update in book Stock Level");
         }
         book.setStockLevel(stockUpdateRequest.getStockLevel());
@@ -140,7 +143,7 @@ public class BookServiceImpl implements BookService {
 
         List<Book> books = bookRepository.findByCategoryId(categoryId);
         if (books.isEmpty()) {
-            log.warn("There are no books in this category with id {}", categoryId);
+            log.error("There are no books in this category with id {}", categoryId);
             throw new RecordNotFoundException("There are no books in this category");
         }
 
@@ -160,7 +163,7 @@ public class BookServiceImpl implements BookService {
 
         List<Book> books = bookRepository.findByCategoryName(categoryName);
         if (books.isEmpty()) {
-            log.warn("There are no books in this category {}", categoryName);
+            log.error("There are no books in this category {}", categoryName);
             throw new RecordNotFoundException("There are no books in this category");
         }
 
@@ -190,14 +193,14 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new RecordNotFoundException("The book with ID " + bookId + " does not exist"));
 
         if(!book.isAvailable() || book.getStockLevel()==0){
-            log.warn("The book with ID {} Not available now", bookId);
+            log.error("The book with ID {} Not available now", bookId);
             throw new RecordNotFoundException("The book with ID " + bookId + " Not available now");
         }
 
         borrowingRequestRepository.findByBookId(bookId)
                 .ifPresent(existingBorrowingRequest -> {
                     if (existingBorrowingRequest.getUser().getId().equals(userId)) {
-                        log.warn("This Borrowing request is already exist {}", existingBorrowingRequest);
+                        log.error("This Borrowing request is already exist {}", existingBorrowingRequest);
                         throw new ConflictException("This Borrowing request is already Exist");
                     }
                 });
@@ -227,7 +230,7 @@ public class BookServiceImpl implements BookService {
         log.info("Admin want to view all requests");
         List<BorrowingRequest> borrowingRequests = borrowingRequestRepository.findAll();
         if(borrowingRequests.isEmpty()){
-            log.warn("There are no requests yet");
+            log.error("There are no requests yet");
             throw new RecordNotFoundException("There are no requests yet");
         }
         List<BorrowingRequestDTO> borrowingRequestDTOS = borrowingRequests.stream()
@@ -268,7 +271,7 @@ public class BookServiceImpl implements BookService {
         log.info("customer with id {} want to view his Borrowing requests", userId);
         List<BorrowingRequest> borrowingRequests = borrowingRequestRepository.findByUserId(userId);
         if (borrowingRequests.isEmpty()) {
-            log.warn("No borrowing requests found for user with ID {}", userId);
+            log.error("No borrowing requests found for user with ID {}", userId);
             throw new RecordNotFoundException("No borrowing requests found for user with ID " + userId);
         }
         List<BorrowingRequestWrapperDTO> customerBorrowingRequests = borrowingRequests.stream()

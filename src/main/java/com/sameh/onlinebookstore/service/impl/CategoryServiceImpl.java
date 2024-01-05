@@ -29,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.findByName(categoryRequestDTO.getName())
                 .ifPresent(existingCategory -> {
+                    log.error("Category with name: {} already exists", categoryRequestDTO.getName());
                     throw new ConflictException("Category with name: " + categoryRequestDTO.getName() + " already exists");
                 });
 
@@ -47,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
         updatedCategory.setId(existingCategory.getId());
 
         if(existingCategory.equals(updatedCategory)){
-            log.warn("not found any updates the updateCategory: {}, the existingCategory: {}", updatedCategory,existingCategory);
+            log.error("not found any updates the updateCategory: {}, the existingCategory: {}", updatedCategory,existingCategory);
             throw new NoUpdateFoundException("Not found Any update in the Category details");
         }
         log.info("The category Before update {}", existingCategory);
