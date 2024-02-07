@@ -1,7 +1,6 @@
 package com.sameh.onlinebookstore.repository;
 
 import com.sameh.onlinebookstore.entity.User;
-import com.sameh.onlinebookstore.entity.enums.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
