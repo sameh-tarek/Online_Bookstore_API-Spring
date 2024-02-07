@@ -75,7 +75,7 @@ public class BookServiceImpl implements BookService {
     public String updateBook(Long id, BookRequestDTO bookRequestDTO) {
         log.info("Admin want to update the book with id {}", id);
         Book existingBook = bookRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("The book with ID "+ id +"does not exist"));
+                .orElseThrow(() -> new RecordNotFoundException("The book with ID "+ id +" does not exist"));
         Book updatedBook = bookMapper.toEntity(bookRequestDTO);
         updatedBook.setId(id);
         updatedBook.setPublishDate(existingBook.getPublishDate());
@@ -95,7 +95,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public String setBookAvailability(Long id, BookAvailabilityRequest bookAvailabilityRequest) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("The book with ID "+ id +"does not exist"));
+                .orElseThrow(() -> new RecordNotFoundException("The book with ID "+ id +" does not exist"));
         log.info("Admin want to update availability for this book {}", book);
 
         if(book.isAvailable() == bookAvailabilityRequest.isAvailable()){
