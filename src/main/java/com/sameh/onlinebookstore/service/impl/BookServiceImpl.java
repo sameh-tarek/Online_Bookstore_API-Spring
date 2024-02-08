@@ -206,7 +206,7 @@ public class BookServiceImpl implements BookService {
                 });
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RecordNotFoundException( "This user with id " + userId + "doesn't exist"));
+                .orElse(null);
 
         BorrowingRequest newBorrowingRequest = new BorrowingRequest();
         newBorrowingRequest.setBook(book);
@@ -217,7 +217,7 @@ public class BookServiceImpl implements BookService {
         return "The request you are submitting to borrow the book has been sent to the admin and will be reviewed.";
     }
 
-    private Long getUserId(String userEmail) {
+    public Long getUserId(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
         Long userId = user.getId();

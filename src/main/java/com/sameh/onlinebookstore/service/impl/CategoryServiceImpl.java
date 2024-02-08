@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
-    CategoryMapper categoryMapper;
+    private CategoryMapper categoryMapper;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
     public String addCategory(CategoryRequestDTO categoryRequestDTO) {
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     public String updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
         log.info("Admin want to update the category with id {}", id);
         Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("This category with id "+ id + "doesn't exist"));
+                .orElseThrow(() -> new RecordNotFoundException("This category with id "+ id + " doesn't exist"));
         Category updatedCategory = categoryMapper.toEntity(categoryRequestDTO);
         updatedCategory.setId(existingCategory.getId());
 
